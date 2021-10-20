@@ -132,6 +132,11 @@ require'nvim-treesitter.configs'.setup {
 local cmp = require'cmp'
 local lspkind = require('lspkind')
 cmp.setup({
+    snippet = {
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end,
+        },
     formatting = {
         format = require('lspkind').cmp_format({with_text = true, menu = ({
             buffer = "[Buffer]",
