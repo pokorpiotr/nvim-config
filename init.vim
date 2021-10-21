@@ -8,27 +8,52 @@ set expandtab
 set hidden
 set updatetime=300
 set completeopt=menu,menuone,noselect
+set pumheight=10
 
-nmap <leader>rn <Plug>(coc-rename)
-nmap <F1> :CHADopen<CR>
+"cursor highlighting in active buffer
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
+
+"open terminal - Powershell Core
+command Pwsh terminal pwsh
+nnoremap <C-t> :Pwsh<CR>
+"close terminal mode
+tnoremap <Esc> <C-\><C-n>
+
+"nmap <leader>rn <Plug>(coc-rename)
+"Move to previous buffer
 nmap <F2> :bprevious<CR>
+"Move to next buffer
 nmap <F3> :bnext<CR>
 
-call plug#begin('C:\Users\user\AppData\Local\nvim\autoload\plugged')
+"Window resizing
+nnoremap <M-Down> :resize -2<CR>
+nnoremap <M-Up> :resize +2<CR>
+nnoremap <M-Left> :vertical resize -2<CR>
+nnoremap <M-Right> :vertical resize +2<CR>
+
+"Better tabbing
+vnoremap < <gv
+vnoremap > >gv
+
+"Normal saving
+nnoremap <C-s> :w<CR>
+
+"Nvim-tree keybinds
+nnoremap <C-e> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
+
+call plug#begin('./autoload/plugged/')
     Plug 'mhinz/vim-startify'
-    Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
-    "Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    "Plug 'nvim-treesitter/nvim-treesitter', {'do': 'TSUpdate'}
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
     Plug 'ryanoasis/vim-devicons'
-    Plug 'joshdick/onedark.vim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
-    "Plug 'fannheyward/telescope-coc.nvim'
     Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
     Plug 'cohama/lexima.vim'
-    "Plug 'kassio/neoterm'
     Plug 'mattn/emmet-vim'
     Plug 'alvan/vim-closetag'
     Plug 'neovim/nvim-lspconfig'
@@ -43,32 +68,29 @@ call plug#begin('C:\Users\user\AppData\Local\nvim\autoload\plugged')
     Plug 'hrsh7th/vim-vsnip'
     Plug 'hrsh7th/cmp-path'
     Plug 'onsails/lspkind-nvim'
+    "Plug 'HendrikPetertje/vimify'
+    Plug 'projekt0n/github-nvim-theme'
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'kyazdani42/nvim-tree.lua'
+    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'hoob3rt/lualine.nvim'
+    Plug 'kdheepak/tabline.nvim'
+    Plug 'rcarriga/nvim-notify'
+    Plug 'norcalli/nvim-colorizer.lua'
+    Plug 'lukas-reineke/indent-blankline.nvim'
 call plug#end()
 
+"syntax highlighting on
 syntax on
-colorscheme onedark
-set termguicolors
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_powerline_fonts = 1
-let g:airline_theme='onedark'
-
-let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
-let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
-let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
-
+"Emmet and auto-tag-closing
 let g:user_emmet_leader_key=','
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.php'
 let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
 let g:closetag_filetypes = 'html,xhtml,phtml,php'
 let g:closetag_xhtml_filetypes = 'xhtml,jsx'
 
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
-
+"LSP keybinds
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> <C-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
@@ -84,37 +106,60 @@ nnoremap <silent> ga <cmd>Lspsaga code_action<CR>
 xnoremap <silent> ga <cmd>Lspsaga range_code_action<CR>
 nnoremap <silent> gs <cmd>Lspsaga signature_help<CR>
 
-"
+"Leader key
 let g:mapleader=","
 
-"
+"telescope keybinds
 nnoremap <Leader>pp <cmd>lua require'telescope.builtin'.builtin{}<CR>
-
-"
 nnoremap <Leader>m <cmd>lua require'telescope.builtin'.oldfiles{}<CR>
-
-"
 nnoremap ; <cmd>lua require'telescope.builtin'.buffers{}<CR>
-
-"
 nnoremap <Leader>/ <cmd>lua require'telescope.builtin'.current_buffer_fuzzy_find{}<CR>
-
-"
 nnoremap <Leader>' <cmd>lua require'telescope.builtin'.marks{}<CR>
-
-"
 nnoremap <Leader>f <cmd>lua require'telescope.builtin'.git_files{}<CR>
-
-"
 nnoremap <Leader>bfs <cmd>lua require'telescope.builtin'.find_files{}<CR>
-
-"
 nnoremap <Leader>rg <cmd>lua require'telescope.builtin'.live_grep{}<CR>
-
-"
 nnoremap <Leader>cs <cmd>lua require'telescope.builtin'.colorscheme{}<CR>
 
+"Nvim-tree config
+let g:nvim_tree_git_hl = 1
+let g:nvim_tree_icon_padding = ' '
+let g:nvim_tree_synlink_arrow = ' >> '
+let g:nvim_tree_show_icons = {
+    \ 'git' : 1,
+    \ 'folders' : 1,
+    \ 'files' : 1,
+    \ 'folder_arrows' : 1,
+    \}
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "",
+    \   'renamed': "➜",
+    \   'untracked': "★",
+    \   'deleted': "",
+    \   'ignored': "◌"
+    \   },
+    \ 'folder': {
+    \   'arrow_open': "",
+    \   'arrow_closed': "",
+    \   'default': "",
+    \   'open': "",
+    \   'empty': "",
+    \   'empty_open': "",
+    \   'symlink': "",
+    \   'symlink_open': "",
+    \   }
+    \ }
+
+"""""""""""""""""""""""""""""""""""""""""""""""
+"LUA Config
+
 lua <<EOF
+
+--LSP servers
 require'lspconfig'.tsserver.setup{}
 require'lspconfig'.vimls.setup{}
 require'lspconfig'.emmet_ls.setup{}
@@ -122,21 +167,39 @@ require'lspconfig'.html.setup{}
 require'lspconfig'.cssls.setup{}
 require'lspconfig'.jsonls.setup{}
 
+--Nvim-tree setup
+require'nvim-tree'.setup{
+    diagnostics = {
+        enable = true,
+        icons = {
+            hint = '',
+            info = '',
+            warning = '',
+            error = '',
+        }
+    }
+}
+
+--Treesitter setup
 require'nvim-treesitter.configs'.setup {
     ensure_installed = { 'javascript', 'css', 'html', 'json', 'lua', 'php', 'typescript', 'vim' },
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = true,
-        },
     }
+}
+
+--Nvim-cmp
 local cmp = require'cmp'
+--LSPkind - autocompletion symbols
 local lspkind = require('lspkind')
+--Nvim-cmp setup
 cmp.setup({
     snippet = {
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
-        end,
-        },
+        end
+    },
     formatting = {
         format = require('lspkind').cmp_format({with_text = true, menu = ({
             buffer = "[Buffer]",
@@ -144,33 +207,87 @@ cmp.setup({
             luasnip = "[LuaSnip]",
             nvim_lua = "[Lua]",
             latex_symbols = "[Latex]",
-            path = "[Path]",
+            path = "[Path]"
         })})
     },
-mapping = {
-  ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-  ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-  ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-  ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-  ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-  ['<C-f>'] = cmp.mapping.scroll_docs(4),
-  ['<C-Space>'] = cmp.mapping.complete(),
-  ['<C-e>'] = cmp.mapping.close(),
-  ['<CR>'] = cmp.mapping.confirm({
-    behavior = cmp.ConfirmBehavior.Replace,
-    select = true,
-  })
-},
-cmp.setup {
-  completion = {
-    completeopt = 'menu,menuone,noinsert',
-  }
-},
+    mapping = {
+        ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.close(),
+        ['<CR>'] = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true
+        })
+    },
+    completion = {
+        completeopt = 'menu,menuone,noinsert'
+    },
     sources = {
         { name = 'nvim_lsp' },
         { name = 'vsnip' },
         { name = 'buffer' },
         { name = 'path' }
-    },
+    }
 })
+
+--Lualine and Tabline setup
+require('tabline').setup()
+require('lualine').setup({
+    options = {
+        theme = 'github',
+    },
+    extensions = { 'nvim-tree' }
+})
+
+--Editor theme - GitHub
+require("github-theme").setup({
+    theme_style = 'dark',
+    sidebars = {'qf', 'vista_kind', 'terminal', 'packer'},
+    dark_sidebar = true,
+    comment_style = 'italic',
+    keyword_style = 'NONE',
+    function_style = 'NONE',
+    variable_style = 'NONE'
+})
+
+--Git signs - status lines of insertion/modification/deletion
+require('gitsigns').setup()
+
+--Colorizer setup
+require('colorizer').setup()
+
+vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
+
+vim.opt.list = true
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
+require("indent_blankline").setup {
+    space_char_blankline = " ",
+    char_highlight_list = {
+        "IndentBlanklineIndent1",
+        "IndentBlanklineIndent2",
+        "IndentBlanklineIndent3",
+        "IndentBlanklineIndent4",
+        "IndentBlanklineIndent5",
+        "IndentBlanklineIndent6",
+    },
+ show_current_context = true,
+}
 EOF
+
+" LUA Config end
+"""""""""""""""""""""""""""""
+
+set termguicolors
+hi CursorLineNR term=bold ctermfg=Yellow gui=bold guifg=Yellow
