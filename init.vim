@@ -17,6 +17,16 @@ augroup CursorLine
     au WinLeave * setlocal nocursorline
 augroup END
 
+augroup my-glyph-palette
+    autocmd! *
+    autocmd FileType fern call glyph_palette#apply()
+    autocmd FileType NvimTree call glyph_palette#apply()
+    autocmd FileType startify call glyph_palette#apply()
+    autocmd FileType lspkind call glyph_palette#apply()
+    autocmd FileType lspsaga call glyph_palette#apply()
+    autocmd FileType LSP call glyph_palette#apply()
+augroup END
+
 "open terminal - Powershell Core
 command Pwsh terminal pwsh
 nnoremap <C-t> :Pwsh<CR>
@@ -78,6 +88,7 @@ call plug#begin('~/AppData/Local/nvim/autoload/plugged/')
     Plug 'rcarriga/nvim-notify'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lukas-reineke/indent-blankline.nvim'
+    Plug 'lambdalisue/glyph-palette.vim'
 call plug#end()
 
 "syntax highlighting on
