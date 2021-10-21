@@ -13,3 +13,7 @@ Based on native lsp, telescope and treesitter.
 1. Improve config of lspsaga
 2. Add colored glyphs for lspkind
 3. Add Spotify by Vimify plugin
+
+# Installation
+1. Put init.vim in :echo stdpath('config')
+2. Put /lspkind/init.lua in ./autoload/plugged/lspkind-nvim/lua/lspkind/
